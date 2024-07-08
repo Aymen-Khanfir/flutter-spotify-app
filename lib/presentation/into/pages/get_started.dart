@@ -44,7 +44,7 @@ class GetStartedPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 const Text(
-                  'Enjoy listening to music',
+                  'Enjoy Listening To Music',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
