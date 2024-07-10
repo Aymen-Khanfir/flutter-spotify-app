@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:spotify/common/helpers/is_dark_mode.dart';
 import 'package:spotify/common/widgets/appbar/app_bar.dart';
 import 'package:spotify/common/widgets/button/basic_app_button.dart';
 import 'package:spotify/core/configs/assets/app_vectors.dart';
+import 'package:spotify/core/configs/theme/app_colors.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
+
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  bool _isVisible = false;
 
   Widget _registerText() {
     return const Text(
@@ -37,14 +46,27 @@ class SignupPage extends StatelessWidget {
 
   Widget _passwordField(BuildContext context) {
     return TextField(
-      keyboardType: TextInputType.emailAddress,
-      decoration: const InputDecoration(
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: !_isVisible,
+      decoration: InputDecoration(
         hintText: 'Password',
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 20, left: 10),
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                _isVisible = !_isVisible;
+              });
+            },
+            icon: Icon(_isVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+            color: const Color(0xff8D8D8D),
+          ),
+        ),
       ).applyDefaults(Theme.of(context).inputDecorationTheme),
     );
   }
 
-  Widget _siginText() {
+  Widget _sigupText() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30),
       child: Row(
@@ -69,6 +91,33 @@ class SignupPage extends StatelessWidget {
     );
   }
 
+  Widget _supportText(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'If you need any support',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 12,
+            color: context.isDarkMode ? const Color(0xffE1E1E1) : const Color(0xff383838),
+          ),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: const Text(
+            'Click Here',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 12,
+              color: AppColors.primary,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,14 +128,15 @@ class SignupPage extends StatelessWidget {
           width: 40,
         ),
       ),
-      bottomNavigationBar: _siginText(),
+      bottomNavigationBar: _sigupText(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _registerText(),
-            const SizedBox(height: 50),
+            _supportText(context),
+            const SizedBox(height: 30),
             _fullNameField(context),
             const SizedBox(height: 16),
             _emailField(context),
