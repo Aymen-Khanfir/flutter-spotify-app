@@ -5,6 +5,7 @@ import 'package:spotify/common/widgets/button/basic_app_button.dart';
 import 'package:spotify/core/configs/assets/app_vectors.dart';
 import 'package:spotify/core/configs/theme/app_colors.dart';
 import 'package:spotify/common/helpers/is_dark_mode.dart';
+import 'package:spotify/presentation/auth/pages/signup.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -74,7 +75,11 @@ class _SigninPageState extends State<SigninPage> {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SignupPage(),
+              ));
+            },
             child: const Text(
               'Register Now',
               style: TextStyle(

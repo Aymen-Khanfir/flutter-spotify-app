@@ -5,6 +5,7 @@ import 'package:spotify/common/widgets/appbar/app_bar.dart';
 import 'package:spotify/common/widgets/button/basic_app_button.dart';
 import 'package:spotify/core/configs/assets/app_vectors.dart';
 import 'package:spotify/core/configs/theme/app_colors.dart';
+import 'package:spotify/presentation/auth/pages/signin.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -80,7 +81,11 @@ class _SignupPageState extends State<SignupPage> {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SigninPage(),
+              ));
+            },
             child: const Text(
               'Sign In',
               style: TextStyle(color: Color(0xff288CE9)),
