@@ -57,15 +57,16 @@ class SignupOrSigninPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: BasicAppButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) => const SignupPage(),
-                                ),
-                              );
-                            },
-                            title: 'Register'),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => const SignupPage(),
+                              ),
+                            );
+                          },
+                          title: 'Register',
+                        ),
                       ),
                       const SizedBox(width: 20),
                       Expanded(

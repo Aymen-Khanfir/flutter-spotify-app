@@ -5,7 +5,11 @@ import 'package:spotify/common/widgets/appbar/app_bar.dart';
 import 'package:spotify/common/widgets/button/basic_app_button.dart';
 import 'package:spotify/core/configs/assets/app_vectors.dart';
 import 'package:spotify/core/configs/theme/app_colors.dart';
+import 'package:spotify/data/models/auth/create_user_req.dart';
+import 'package:spotify/domaine/usecases/auth/signup.dart';
 import 'package:spotify/presentation/auth/pages/signin.dart';
+import 'package:spotify/presentation/root/pages/root.dart';
+import 'package:spotify/service_locator.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -16,6 +20,11 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool _isVisible = false;
+  bool _isAuthenticating = false;
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Widget _registerText() {
     return const Text(
@@ -30,6 +39,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _fullNameField(BuildContext context) {
     return TextField(
+      controller: _usernameController,
       decoration: const InputDecoration(
         hintText: 'Full Name',
       ).applyDefaults(Theme.of(context).inputDecorationTheme),
@@ -38,6 +48,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _emailField(BuildContext context) {
     return TextField(
+      controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
         hintText: 'Enter Email',
@@ -47,6 +58,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _passwordField(BuildContext context) {
     return TextField(
+      controller: _passwordController,
       keyboardType: TextInputType.visiblePassword,
       obscureText: !_isVisible,
       decoration: InputDecoration(
@@ -67,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _sigupText() {
+  Widget _signinText() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30),
       child: Row(
@@ -123,6 +135,43 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+  void sigup() async {
+    setState(() {
+      _isAuthenticating = true;
+    });
+    var result = await serviceLocator<SignupUseCase>().call(
+      params: CreateUserReq(
+        fullName: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      ),
+    );
+
+    result.fold(
+      (l) {
+        var snackBar = SnackBar(content: Text(l));
+        print("Look Here: $_isAuthenticating");
+        setState(() {
+          _isAuthenticating = false;
+        });
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      },
+      (r) {
+        setState(() {
+          _isAuthenticating = false;
+        });
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const RootPage(),
+          ),
+          (route) => false,
+        );
+        print("Look Here: $_isAuthenticating");
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +182,7 @@ class _SignupPageState extends State<SignupPage> {
           width: 40,
         ),
       ),
-      bottomNavigationBar: _sigupText(),
+      bottomNavigationBar: _signinText(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
         child: Column(
@@ -148,7 +197,14 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(height: 16),
             _passwordField(context),
             const SizedBox(height: 33),
-            BasicAppButton(onPressed: () {}, title: 'Create Account'),
+            !_isAuthenticating
+                ? BasicAppButton(
+                    onPressed: sigup,
+                    title: 'Create Account',
+                  )
+                : const CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
           ],
         ),
       ),
