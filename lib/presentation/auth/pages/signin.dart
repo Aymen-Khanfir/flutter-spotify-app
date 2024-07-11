@@ -5,7 +5,11 @@ import 'package:spotify/common/widgets/button/basic_app_button.dart';
 import 'package:spotify/core/configs/assets/app_vectors.dart';
 import 'package:spotify/core/configs/theme/app_colors.dart';
 import 'package:spotify/common/helpers/is_dark_mode.dart';
+import 'package:spotify/data/models/auth/signin_user_req.dart';
+import 'package:spotify/domain/usecases/auth/signin.dart';
 import 'package:spotify/presentation/auth/pages/signup.dart';
+import 'package:spotify/presentation/root/pages/root.dart';
+import 'package:spotify/service_locator.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -16,6 +20,10 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   bool _isVisible = false;
+  bool _isAuthenticating = false;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Widget _registerText() {
     return const Text(
@@ -28,11 +36,12 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  Widget _usernameEmailField(BuildContext context) {
+  Widget _emailField(BuildContext context) {
     return TextField(
+      controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        hintText: 'Enter Username Or Email',
+        hintText: 'Enter Email',
       ).applyDefaults(
         Theme.of(context).inputDecorationTheme,
       ),
@@ -41,6 +50,7 @@ class _SigninPageState extends State<SigninPage> {
 
   Widget _passwordField(BuildContext context) {
     return TextField(
+      controller: _passwordController,
       keyboardType: TextInputType.visiblePassword,
       obscureText: !_isVisible,
       decoration: InputDecoration(
@@ -120,6 +130,40 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
+  void sigin() async {
+    setState(() {
+      _isAuthenticating = true;
+    });
+    var result = await serviceLocator<SigninUseCase>().call(
+      params: SigninUserReq(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ),
+    );
+
+    result.fold(
+      (l) {
+        var snackBar = SnackBar(content: Text(l));
+        setState(() {
+          _isAuthenticating = false;
+        });
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      },
+      (r) {
+        setState(() {
+          _isAuthenticating = false;
+        });
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const RootPage(),
+          ),
+          (route) => false,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +183,7 @@ class _SigninPageState extends State<SigninPage> {
             _registerText(),
             _supportText(context),
             const SizedBox(height: 30),
-            _usernameEmailField(context),
+            _emailField(context),
             const SizedBox(height: 16),
             _passwordField(context),
             const SizedBox(height: 20),
@@ -158,7 +202,14 @@ class _SigninPageState extends State<SigninPage> {
               ),
             ),
             const SizedBox(height: 22),
-            BasicAppButton(onPressed: () {}, title: 'Sign In'),
+            !_isAuthenticating
+                ? BasicAppButton(
+                    onPressed: sigin,
+                    title: 'Sign In',
+                  )
+                : const CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
           ],
         ),
       ),

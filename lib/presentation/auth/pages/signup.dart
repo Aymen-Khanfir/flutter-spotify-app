@@ -6,7 +6,7 @@ import 'package:spotify/common/widgets/button/basic_app_button.dart';
 import 'package:spotify/core/configs/assets/app_vectors.dart';
 import 'package:spotify/core/configs/theme/app_colors.dart';
 import 'package:spotify/data/models/auth/create_user_req.dart';
-import 'package:spotify/domaine/usecases/auth/signup.dart';
+import 'package:spotify/domain/usecases/auth/signup.dart';
 import 'package:spotify/presentation/auth/pages/signin.dart';
 import 'package:spotify/presentation/root/pages/root.dart';
 import 'package:spotify/service_locator.dart';
@@ -150,7 +150,6 @@ class _SignupPageState extends State<SignupPage> {
     result.fold(
       (l) {
         var snackBar = SnackBar(content: Text(l));
-        print("Look Here: $_isAuthenticating");
         setState(() {
           _isAuthenticating = false;
         });
@@ -167,7 +166,6 @@ class _SignupPageState extends State<SignupPage> {
           ),
           (route) => false,
         );
-        print("Look Here: $_isAuthenticating");
       },
     );
   }
