@@ -8,7 +8,7 @@ import 'package:spotify/common/helpers/is_dark_mode.dart';
 import 'package:spotify/data/models/auth/signin_user_req.dart';
 import 'package:spotify/domain/usecases/auth/signin.dart';
 import 'package:spotify/presentation/auth/pages/signup.dart';
-import 'package:spotify/presentation/root/pages/root.dart';
+import 'package:spotify/presentation/home/pages/home.dart';
 import 'package:spotify/service_locator.dart';
 
 class SigninPage extends StatefulWidget {
@@ -156,7 +156,7 @@ class _SigninPageState extends State<SigninPage> {
         });
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => const RootPage(),
+            builder: (context) => const HomePage(),
           ),
           (route) => false,
         );
