@@ -4,6 +4,8 @@ import 'package:spotify/common/helpers/is_dark_mode.dart';
 import 'package:spotify/core/configs/constants/app_urls.dart';
 import 'package:spotify/core/configs/theme/app_colors.dart';
 import 'package:spotify/presentation/home/bloc/news_songs_cubit.dart';
+import 'package:spotify/presentation/song_player/pages/song_player.dart';
+
 import '../../../domain/entities/song/song.dart';
 import '../bloc/news_songs_state.dart';
 
@@ -18,7 +20,15 @@ class NewsSongs extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SongPlayerPage(
+                    songEntity: songs[index],
+                  ),
+                ),
+              );
+            },
             child: SizedBox(
               width: 160,
               child: Column(
@@ -31,7 +41,7 @@ class NewsSongs extends StatelessWidget {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            '${AppUrls.firestorage}${songs[index].artist} - ${songs[index].title}.jpg${AppUrls.mediaAlt}',
+                            '${AppUrls.coverFirestorage}${songs[index].artist} - ${songs[index].title}.jpg${AppUrls.mediaAlt}',
                           ),
                         ),
                       ),
@@ -43,11 +53,15 @@ class NewsSongs extends StatelessWidget {
                           transform: Matrix4.translationValues(10, 10, 0),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: context.isDarkMode ? AppColors.darkGrey : const Color(0xffE6E6E6),
+                            color: context.isDarkMode
+                                ? AppColors.darkGrey
+                                : const Color(0xffE6E6E6),
                           ),
                           child: Icon(
                             Icons.play_arrow_rounded,
-                            color: context.isDarkMode ? const Color(0xff959595) : const Color(0xff555555),
+                            color: context.isDarkMode
+                                ? const Color(0xff959595)
+                                : const Color(0xff555555),
                           ),
                         ),
                       ),
@@ -58,21 +72,24 @@ class NewsSongs extends StatelessWidget {
                   ),
                   Text(
                     songs[index].title,
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
                     songs[index].artist,
-                    style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w400, fontSize: 12),
                   )
                 ],
               ),
             ),
           );
         },
-        separatorBuilder: (context, index) => const SizedBox(width: 14), // Distance between items
+        separatorBuilder: (context, index) => const SizedBox(width: 14),
+        // Distance between items
         itemCount: songs.length,
       ),
     );

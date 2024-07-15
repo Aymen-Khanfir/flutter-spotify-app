@@ -2,7 +2,7 @@ class SigninUserReq {
   final String email;
   final String password;
 
-  const SigninUserReq({
+  SigninUserReq({
     required this.email,
     required this.password,
   });

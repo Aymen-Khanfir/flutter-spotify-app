@@ -5,14 +5,14 @@ import 'package:spotify/data/models/auth/create_user_req.dart';
 import 'package:spotify/data/models/auth/signin_user_req.dart';
 
 abstract class AuthFirebaseService {
-  Future<Either> sigup(CreateUserReq createUserReq);
+  Future<Either> signup(CreateUserReq createUserReq);
 
-  Future<Either> sigin(SigninUserReq signinUserReq);
+  Future<Either> signin(SigninUserReq signinUserReq);
 }
 
 class AuthFirebaseServiceImpl extends AuthFirebaseService {
   @override
-  Future<Either> sigin(SigninUserReq signinUserReq) async {
+  Future<Either> signin(SigninUserReq signinUserReq) async {
     try {
       FirebaseAuth.instance.signInWithEmailAndPassword(
         email: signinUserReq.email,
@@ -36,7 +36,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
   }
 
   @override
-  Future<Either> sigup(CreateUserReq createUserReq) async {
+  Future<Either> signup(CreateUserReq createUserReq) async {
     try {
       final userData = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: createUserReq.email,

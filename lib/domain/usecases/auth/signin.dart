@@ -6,7 +6,7 @@ import 'package:spotify/service_locator.dart';
 
 class SigninUseCase implements Usecase<Either, SigninUserReq> {
   @override
-  Future<Either> call({SigninUserReq? params}) {
+  Future<Either> call({SigninUserReq? params}) async {
     return serviceLocator<AuthRepository>().signin(params!);
   }
 }

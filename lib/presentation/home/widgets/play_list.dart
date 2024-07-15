@@ -6,6 +6,8 @@ import 'package:spotify/domain/entities/song/song.dart';
 import 'package:spotify/presentation/home/bloc/play_list_cubit.dart';
 import 'package:spotify/presentation/home/bloc/play_list_state.dart';
 
+import '../../song_player/pages/song_player.dart';
+
 class PlayList extends StatelessWidget {
   const PlayList({super.key});
 
@@ -14,7 +16,15 @@ class PlayList extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SongPlayerPage(
+                  songEntity: songs[index],
+                ),
+              ),
+            );
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -25,11 +35,15 @@ class PlayList extends StatelessWidget {
                     width: 45,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: context.isDarkMode ? AppColors.darkGrey : const Color(0xffE6E6E6),
+                      color: context.isDarkMode
+                          ? AppColors.darkGrey
+                          : const Color(0xffE6E6E6),
                     ),
                     child: Icon(
                       Icons.play_arrow_rounded,
-                      color: context.isDarkMode ? const Color(0xff959595) : const Color(0xff555555),
+                      color: context.isDarkMode
+                          ? const Color(0xff959595)
+                          : const Color(0xff555555),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -38,12 +52,18 @@ class PlayList extends StatelessWidget {
                     children: [
                       Text(
                         songs[index].title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         songs[index].artist,
-                        style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   )
@@ -56,7 +76,7 @@ class PlayList extends StatelessWidget {
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(
-                      Icons.favorite_rounded,
+                      Icons.favorite_outline_outlined,
                       color: AppColors.darkGrey,
                     ),
                   )
@@ -96,14 +116,19 @@ class PlayList extends StatelessWidget {
                       children: [
                         const Text(
                           'Playlist',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                         Text(
                           'See More',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 12,
-                            color: context.isDarkMode ? const Color(0xffC6C6C6) : const Color(0xff131313),
+                            color: context.isDarkMode
+                                ? const Color(0xffC6C6C6)
+                                : const Color(0xff131313),
                           ),
                         ),
                       ],
